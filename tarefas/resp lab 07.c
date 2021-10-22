@@ -16,34 +16,34 @@ nopeca *primesa = NULL;
 int inicializa()
 {
     int i, j, c1 = 0, c2 = 0, sort;
-    nopeca *aux;
+    nopeca *aux;// ponteiro auxiliar 
     srand(time(NULL));
-    for (int i = 0; i < 7; i++) //face2
+    for (int i = 0; i < 7; i++) //face1 varia 0 a 6
     {
-        for (j = i; j < 7; j++) // face2
+        for (j = i; j < 7; j++) // face2 p/ nao repetir faces
         {
-            aux = (nopeca *)malloc(sizeof(nopeca));
+            aux = (nopeca *)malloc(sizeof(nopeca));// alocar espaco de memoria
             aux->face1 = i;
             aux->face2 = j;
-            aux->prox = NULL;
-            if (c1 == 14)
+            aux->prox = NULL;// nao ta tribuindo para os jogadores , so criando
+            if (c1 == 14)//jog1
             {
                 sort = 1;
             }
             else
             {
-                if (c2 == 14)
+                if (c2 == 14)//jog 2
                 {
                     sort = 0;
                 }
                 else
                 {
-                    sort = rand() % 2;
+                    sort = rand() % 2;//sorteia qual jogador recebe a peca
                 }
             }
             if ((i == 6) && (j == 6))
             {
-                primesa = aux;
+                primesa = aux;// peca 6:6 vai pra mesa
             }
             else //pecas diferentes de 6:6
             {
@@ -114,13 +114,46 @@ nopeca *removejogador1(int f)
         return NULL;
     }
 }
+nopeca *removejogador2(int f)
+{
+    nopeca *ant = NULL, *atual = prijog2;
+    while ((atual != NULL) && (atual->face1 != f) & (atual->face2 != f))
+    {
+        ant = atual;
+        atual = atual->prox;
+    }
+    if (atual == NULL)
+    {
+        return NULL;
+    }
+    else
+    {
+        if (ant == NULL)
+        {
+            prijog2 = atual->prox;// tirando a primeira peca
+        }
+        else
+        {
+            ant->prox = atual->prox; // qualquer peca da lista
+        }
+    }
+    if (atual != NULL)
+    {
+        return atual;
+    }
+    else
+    {
+        return NULL;
+    }
+}
 void insereiniciomesa(nopeca *novo)
 {
     novo->prox = primesa;
     primesa = novo;
 }
 void inserefimmesa(nopeca *novo){
-    //terminar de fazer
+    //insere no final da lista da mesa 
+
 }
 
 int main(int argc, char const *argv[])
@@ -129,24 +162,16 @@ int main(int argc, char const *argv[])
     int jogador = inicializa();
     nopeca *aux;
 
-    //so imprime as mesas
-    /*printf("mesa = ");
-    imprime(primesa);
-    printf("jogador 1 = ");
-    imprime(prijog1);
-    printf("jogador 2 = ");
-    imprime(prijog2);*/
-
     while ((prijog1 != NULL) && (prijog2 != NULL))
     {
-        printf("mesa= ");
+        printf("\nmesa= ");
         imprime(primesa);
-        printf("jogador %d\n", jogador);
+        printf("\njogador %d = ", jogador);
         getchar();
 
         if (jogador == 0)
         {
-            aux = removejogador(ini);
+            aux = removejogador1(ini);
             if (aux != NULL)
             {
                 insereiniciomesa(aux);
@@ -158,7 +183,7 @@ int main(int argc, char const *argv[])
                 {
                     ini = aux->face1;
                 }
-            } // fim if aux == null
+            } // fim if aux != null
             else
             {
                 aux = removejogador1(fim);
@@ -173,6 +198,7 @@ int main(int argc, char const *argv[])
                     {
                         fim = aux->face1;
                     }
+                    // remove fim mesa
                 }
             }
             jogador = 1;
@@ -208,9 +234,9 @@ int main(int argc, char const *argv[])
                 jogador = 0;
             }
         }
-        printf("jogador 1= ");
+        printf("\njogador 1= ");
         imprime(prijog1);
-        printf("jogador2= ");
+        printf("\njogador 2 = ");
         imprime(prijog2);
         if(aux == NULL)
         {
