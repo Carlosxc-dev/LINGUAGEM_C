@@ -153,7 +153,24 @@ void insereiniciomesa(nopeca *novo)
 }
 void inserefimmesa(nopeca *novo){
     //insere no final da lista da mesa 
+    nopeca *ant=NULL;
+    nopeca *atual=NULL;
 
+    while (atual != NULL)
+    {
+        ant = atual;
+        atual = atual->prox;
+    }
+    if (ant != NULL)
+    {
+        atual->prox = novo;
+        novo->prox = ant;
+    }
+    else
+    {
+        ant->prox = novo;
+        novo->prox = atual;
+    }
 }
 
 int main(int argc, char const *argv[])
@@ -167,7 +184,7 @@ int main(int argc, char const *argv[])
         printf("\nmesa= ");
         imprime(primesa);
         printf("\njogador %d = ", jogador);
-        getchar();
+        getchar();// pegar enter
 
         if (jogador == 0)
         {
