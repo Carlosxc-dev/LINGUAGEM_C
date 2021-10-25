@@ -16,34 +16,34 @@ nopeca *primesa = NULL;
 int inicializa()
 {
     int i, j, c1 = 0, c2 = 0, sort;
-    nopeca *aux;// ponteiro auxiliar 
+    nopeca *aux; // ponteiro auxiliar
     srand(time(NULL));
     for (int i = 0; i < 7; i++) //face1 varia 0 a 6
     {
         for (j = i; j < 7; j++) // face2 p/ nao repetir faces
         {
-            aux = (nopeca *)malloc(sizeof(nopeca));// alocar espaco de memoria
+            aux = (nopeca *)malloc(sizeof(nopeca)); // alocar espaco de memoria
             aux->face1 = i;
             aux->face2 = j;
-            aux->prox = NULL;// nao ta tribuindo para os jogadores , so criando
-            if (c1 == 14)//jog1
+            aux->prox = NULL; // nao ta tribuindo para os jogadores , so criando
+            if (c1 == 14)     //jog1
             {
                 sort = 1;
             }
             else
             {
-                if (c2 == 14)//jog 2
+                if (c2 == 14) //jog 2
                 {
                     sort = 0;
                 }
                 else
                 {
-                    sort = rand() % 2;//sorteia qual jogador recebe a peca
+                    sort = rand() % 2; //sorteia qual jogador recebe a peca
                 }
             }
             if ((i == 6) && (j == 6))
             {
-                primesa = aux;// peca 6:6 vai pra mesa
+                primesa = aux; // peca 6:6 vai pra mesa
             }
             else //pecas diferentes de 6:6
             {
@@ -130,7 +130,7 @@ nopeca *removejogador2(int f)
     {
         if (ant == NULL)
         {
-            prijog2 = atual->prox;// tirando a primeira peca
+            prijog2 = atual->prox; // tirando a primeira peca
         }
         else
         {
@@ -151,10 +151,12 @@ void insereiniciomesa(nopeca *novo)
     novo->prox = primesa;
     primesa = novo;
 }
-void inserefimmesa(nopeca *novo){
-    //insere no final da lista da mesa 
-    nopeca *ant=NULL;
-    nopeca *atual=NULL;
+void inserefimmesa(nopeca *novo)
+{
+    //insere no final da lista da mesa
+    nopeca *ant = NULL;
+    nopeca *atual = primesa;
+
 
     while (atual != NULL)
     {
@@ -183,8 +185,8 @@ int main(int argc, char const *argv[])
     {
         printf("\nmesa= ");
         imprime(primesa);
-        printf("\njogador %d = ", jogador);
-        getchar();// pegar enter
+        printf("\njogador %d ", jogador);
+        getchar(); // pegar enter
 
         if (jogador == 0)
         {
@@ -200,14 +202,13 @@ int main(int argc, char const *argv[])
                 {
                     ini = aux->face1;
                 }
-            } // fim if aux != null
+            }
             else
             {
                 aux = removejogador1(fim);
                 if (aux != NULL)
                 {
-                    insereiniciomesa(aux);
-                    if (aux->face1)
+                    if (aux->face1 == fim)
                     {
                         fim = aux->face2;
                     }
@@ -215,19 +216,18 @@ int main(int argc, char const *argv[])
                     {
                         fim = aux->face1;
                     }
-                    // remove fim mesa
+                    inserefimmesa(aux);
                 }
             }
             jogador = 1;
-        } // end if jogador 0
+        }
         else
         {
-            //jogador2
-            aux=removejogador2(ini);
-            if (aux!=NULL)
+            aux = removejogador2(ini);
+            if (aux != NULL)
             {
                 insereiniciomesa(aux);
-                if (aux->face1== ini)
+                if (aux->face1 == ini)
                 {
                     ini = aux->face2;
                 }
@@ -235,32 +235,37 @@ int main(int argc, char const *argv[])
                 {
                     ini = aux->face1;
                 }
-                
             }
             else
             {
-                aux = removejogador2(fim);
-                if (aux->face1 == fim)
+                if (aux != NULL)
                 {
-                    fim = aux->face2;
+                    aux = removejogador2(fim);
+                    if (aux->face1 == fim)
+                    {
+                        fim = aux->face2;
+                    }
+                    else
+                    {
+                        fim = aux->face1;
+                    }
+                    inserefimmesa(aux);
                 }
-                else
-                {
-                    fim = aux->face1;
-                }
-                jogador = 0;
             }
+            jogador = 0;
         }
-        printf("\njogador 1= ");
+        printf("\njogador 0 ");
         imprime(prijog1);
-        printf("\njogador 2 = ");
+        printf("\njogador 1 ");
         imprime(prijog2);
-        if(aux == NULL)
+        if (aux == NULL)
         {
             break;
         }
     }
-    if (aux = NULL)
+    // mostra o vencedor
+    printf("\n\n");
+    if (aux == NULL)
     {
         printf("VENCEU JOGADOR %d\n", jogador);
     }

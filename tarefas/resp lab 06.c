@@ -79,7 +79,7 @@ void imprimeSaldo()
             atual = atual->prox;
         } //end while
     }     //end for
-    printf("\nsaldo = %d\n", soma);
+    printf("\nsaldo = %d\n\n", soma);
 } //end imprimeSaldo
 void imprimeSomaCedulas()
 {
@@ -194,6 +194,7 @@ int main(int argc, char const *argv[])
             printf("digite [valorNota quant] = ");
             scanf("%d %d", &valor, &quant);
             abastecePilha(valor, quant);
+            imprimeSaldo();
             break;
         case 2:
             imprimeSaldo();
@@ -223,6 +224,7 @@ int main(int argc, char const *argv[])
             printf("ERRO - opcao invalida");
             break;
         }
+        imprimeSomaCedulas();
     }
 
     return 0;
