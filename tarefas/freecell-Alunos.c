@@ -117,13 +117,6 @@ void imprime()
     int i, j;
     tCarta *aux;
 
-    //imprime naipes
-    for (i = 0; i < 4; i++)
-    {
-        printf("[naipes %d]= \n", i);
-    }
-    printf("\n");
-
     //imprime os mesas
     for (i = 0; i < 8; i++) //mesa
     {
