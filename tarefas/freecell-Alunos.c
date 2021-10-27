@@ -251,15 +251,15 @@ void moveTempMesa()
     }
 }
 // naipe das mesas
-int cartaMaior(int carta1, int carta2)
+int cartaMaior(int c1, int c2)
 {
-    if(carta1 > carta2)
+    if(c1 > c2)
     {
         return 1;
     } 
     else
     {
-        if(carta1 == carta2)
+        if(c1 == c2)
         {
             return 0;
         }
