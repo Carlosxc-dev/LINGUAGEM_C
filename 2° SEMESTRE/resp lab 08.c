@@ -14,8 +14,6 @@ typedef struct no
     struct no *prox;
 } noProcesso;
 
-noProcesso *ult=NULL;
-
 //fila de processos a serem executados na CPU
 noProcesso *filaDeProcessos[NUM_FILAS];
 //vetor que indica a existencia de pelo menos um processo dessa prioridade
@@ -38,10 +36,11 @@ void inicializaVetorPrioridades()
     }
 }
 // indica a prioridade do processo para inserer na fila certa
-void insereFila(float tamProcess, char nomeProcess, int prioriProcess)
+void insereFila(float tamProcess, char nomeProcess[TAM_NOME], int prioriProcess)
 {
-    noProcesso *novo;
-    int intervalo=0;
+    int intervalo=10;
+    noProcesso *atual, *ant=NULL;
+    noProcesso *novo = (noProcesso*)malloc(sizeof(noProcesso));
 
     //intervalos considerados para cada fila de processos
     if ((prioriProcess >= 0) && (prioriProcess <= 3))
@@ -61,47 +60,53 @@ void insereFila(float tamProcess, char nomeProcess, int prioriProcess)
         printf("--> intervalo invalido\n");
     }
 
-    // insercao na fila
-    novo = (noProcesso *)malloc(sizeof(noProcesso));
-
-    if (filaDeProcessos[intervalo] == NULL)
+    // achar ultimo e o penultimo
+    atual = filaDeProcessos[intervalo];
+    while (atual != NULL)
     {
+        ant = atual;
+        atual = atual->prox;
+    }
+    // verifica se e o primeiro da fila 
+    if(ant == NULL){
         filaDeProcessos[intervalo] = novo;
     }
-
-    novo->tamanho = tamProcess;
-    //strcpy(novo->nome, nomeProcess);
-    novo->prioridade = intervalo;
-
-    if (ult != NULL)
-    {
-        ult->prox = novo;
+    else{
+        ant->prox = novo;
     }
-    ult = novo;
+
+    // inserre os dados
+    novo->tamanho = tamProcess;
+    strcpy(novo->nome, nomeProcess);
+    novo->prioridade = prioriProcess;
     novo->prox = NULL;
 }
 // imprime a fila
 void imprime()
 {
-    float tamProcess = 0;
+    float somatam;
     noProcesso *atual;
-    int i, aux = 1, quantProcess=0;
+    int i, aux = 1, quantProcess;
 
     for (i = 0; i < 3; i++)
     {
         atual = filaDeProcessos[i];
         printf("------fila [%d]-------\n", i);
         aux = 1;
+        somatam = 0;
+        quantProcess = 0;
         while (atual != NULL)
         {
-            printf("numero[%d] nome= %s tamanho= %.2f prioridade=%d\n", aux, atual->nome, atual->tamanho, atual->prioridade);
-            atual = atual->prox;
+            printf("numero[%d]  prioridade=%d  ", aux, atual->prioridade);
+            printf("tamanho=%.2f  nome=%s\n", atual->tamanho, atual->nome);
             aux++;
-            tamProcess += atual->tamanho;
+            somatam += atual->tamanho;
             quantProcess++;
+            atual = atual->prox;
         }
-        printf("soma dos tamanhos = %.2f\n", tamProcess);
+        printf("soma dos tamanhos = %.2f\n", somatam);
         printf("numero de processos da fila = %d\n", quantProcess);
+        printf("\n\n");
     }
 }
 
