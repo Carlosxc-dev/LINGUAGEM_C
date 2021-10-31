@@ -109,6 +109,52 @@ void imprime()
         printf("\n\n");
     }
 }
+// remove o primeiro da fila
+bool removePrimeiroFila(){
+    int op, rt=0;
+    noProcesso *aux;
+
+
+    printf("digite a fila da remocao= ");
+    scanf("%d", &op);
+
+    aux = filaDeProcessos[op];
+
+    filaDeProcessos[op] = aux->prox;
+
+    free(aux);
+
+    rt = 1;
+
+    if (rt == 1)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+    
+}
+//destrio toda memoria alocada pela insercao
+void destroiFila(){
+    int i;
+    noProcesso *aux, *atual;
+
+    for ( i = 0; i < 3; i++)
+    {
+        atual = filaDeProcessos[i];
+        while (atual != NULL)
+        {
+            aux = atual;
+            atual = atual->prox;
+            free(aux);
+        }
+    }
+    
+    
+}
+
 
 int main(int argc, char **argv)
 {
@@ -126,5 +172,14 @@ int main(int argc, char **argv)
     insereFila(5.8, "GCC", 2);
 
     imprime();
+    printf("--------------\n\n");
+
+    if(removePrimeiroFila()==true){
+        imprime();
+        printf("\nprimeiro removido com sucesso\n");
+    }
+
+    destroiFila();
+
     return 0;
 } //fim main
