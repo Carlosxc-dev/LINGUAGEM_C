@@ -179,6 +179,7 @@ int main(int argc, char const *argv[])
             break;
         }
     } while (op != 4);
+    
     destroicontato();
 
     return 0;
