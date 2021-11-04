@@ -177,7 +177,7 @@ void inserefimmesa(nopeca *novo)
 
 int main(int argc, char const *argv[])
 {
-    int ini = 6, fim = 6;
+    int ini = 6, fim = 6, cont=0;
     int jogador = inicializa();
     nopeca *aux;
 
@@ -185,15 +185,16 @@ int main(int argc, char const *argv[])
     {
         printf("\nmesa= ");
         imprime(primesa);
-        printf("\njogador %d ", jogador);
+        printf("\n-----------------------------------------------------------------------------\n");
+        cont++;
+        printf("\nvez do jogador [%d]\t\tpartida = [%d]\n", jogador, cont);
         getchar(); // pegar enter
 
         if (jogador == 0)
         {
-            aux = removejogador1(ini);
+            aux = removejogador1(ini);//a2
             if (aux != NULL)
             {
-                insereiniciomesa(aux);
                 if (aux->face1 == ini)
                 {
                     ini = aux->face2;
@@ -202,6 +203,7 @@ int main(int argc, char const *argv[])
                 {
                     ini = aux->face1;
                 }
+                insereiniciomesa(aux);
             }
             else
             {
@@ -221,12 +223,11 @@ int main(int argc, char const *argv[])
             }
             jogador = 1;
         }
-        else
+        else// jogador 2
         {
             aux = removejogador2(ini);
             if (aux != NULL)
             {
-                insereiniciomesa(aux);
                 if (aux->face1 == ini)
                 {
                     ini = aux->face2;
@@ -235,12 +236,13 @@ int main(int argc, char const *argv[])
                 {
                     ini = aux->face1;
                 }
+                insereiniciomesa(aux);
             }
             else
             {
+                aux = removejogador2(fim);
                 if (aux != NULL)
                 {
-                    aux = removejogador2(fim);
                     if (aux->face1 == fim)
                     {
                         fim = aux->face2;
@@ -254,10 +256,11 @@ int main(int argc, char const *argv[])
             }
             jogador = 0;
         }
-        printf("\njogador 0 ");
+        printf("\njogador 0 = ");
         imprime(prijog1);
-        printf("\njogador 1 ");
+        printf("\njogador 1 = ");
         imprime(prijog2);
+
         if (aux == NULL)
         {
             break;
@@ -267,15 +270,15 @@ int main(int argc, char const *argv[])
     printf("\n\n");
     if (aux == NULL)
     {
-        printf("VENCEU JOGADOR %d\n", jogador);
+        printf("\t\t*****  VENCEU JOGADOR %d  *****\n", jogador);
     }
     else if (prijog1 == NULL)
     {
-        printf("VENCEU JOGADOR 1\n");
+        printf("\t\t*****  VENCEU JOGADOR 1  *****\n");
     }
     else if (prijog2 == NULL)
     {
-        printf("VENCEU JOGADOR 2\n");
+        printf("\t\t*****  VENCEU JOGADOR 2  *****\n");
     }
     return 0;
 }
