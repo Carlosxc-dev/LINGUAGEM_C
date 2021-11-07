@@ -164,8 +164,8 @@ void destroipilha()
     while (atual != NULL)
     {
         atual = pilha[i];
-        free(atual);
         pilha[i] = pilha[i]->prox;
+        free(atual);
     }
 }
 
