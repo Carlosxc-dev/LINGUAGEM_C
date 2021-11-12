@@ -13,7 +13,7 @@ typedef struct no
 } noCEP;
 
 noCEP *raiz = NULL;
-int quant; // conta ate 10 elem
+int quant; // conta ate x elem
 
 // insere elem na arvore
 void insereNo(FILE *arq)
@@ -66,13 +66,13 @@ void insereNo(FILE *arq)
             atual = atual->dir;
         }
     }
-    if (ant == NULL)
+    if (ant == NULL)//define raiz da arvore 
     {
         raiz = novo;
     }
     else
     {
-        if (atual == NULL)
+        if (atual == NULL)//procura filho para inserir 
         {
             if (strcmp(novo->cep, ant->cep) < 0)
             {
@@ -88,41 +88,40 @@ void insereNo(FILE *arq)
 // imprime os elementos
 void imprimeNoCEP(noCEP *n)
 {
-
     printf("CEP = %s\n", n->cep);
     printf("UF = %s\n", n->uf);
     printf("cidade = %s\n", n->cidade);
     printf("endereco = %s\n", n->logradouro);
 }
 // imprime em pre-ordem
-void imprimePreOrdem(noCEP *n)
+void imprimePreOrdem(noCEP *n, int opQuant)
 {
-    if ((n != NULL) && (quant < 10))
+    if ((n != NULL) && (quant < opQuant))
     {
         imprimeNoCEP(n);
         quant++;
-        imprimePreOrdem(n->esq);
-        imprimePreOrdem(n->dir);
+        imprimePreOrdem(n->esq, opQuant);
+        imprimePreOrdem(n->dir, opQuant);
     }
 }
 // imprime em ordem
-void imprimeOrdem(noCEP *n)
+void imprimeOrdem(noCEP *n, int opQuant)
 {
-    if ((n != NULL) && (quant < 10))
+    if ((n != NULL) && (quant < opQuant))
     {
-        imprimeOrdem(n->esq);
+        imprimeOrdem(n->esq, opQuant);
         imprimeNoCEP(n);
         quant++;
-        imprimeOrdem(n->dir);
+        imprimeOrdem(n->dir, opQuant);
     }
 }
 // imprime em pos ordem
-void imprimePosOrdem(noCEP *n)
+void imprimePosOrdem(noCEP *n, int opQuant)
 {
-    if ((n != NULL) && (quant < 10))
+    if ((n != NULL) && (quant < opQuant))
     {
-        imprimePosOrdem(n->esq);
-        imprimePosOrdem(n->dir);
+        imprimePosOrdem(n->esq, opQuant);
+        imprimePosOrdem(n->dir, opQuant);
         imprimeNoCEP(n);
         quant++;
     }
@@ -145,7 +144,7 @@ void buscaCEPArvore(noCEP *atual, char cepProcurado[9])
     // quando encontrar o cep
     if (strcmp(cepProcurado, atual->cep) == 0)
     {
-        printf("cep encontrado\n");
+        printf("CEP ENCONTRADO: \n\n");
         imprimeNoCEP(atual);
     }
     else
@@ -163,15 +162,24 @@ void destroiArvore(noCEP *atual)
         free(atual);
     }
 }
+// escolha quantidade de enderecos para imprimir
+int escolhaQuant(){
+    int opQuant = 0;
+
+    printf("Qual a quantidade de cep sera imprimido: ");
+    scanf("%d", &opQuant);
+    printf("\n\n");
+    return opQuant;
+}
 
 // main
 int main(int argc, char **argv)
 {
     FILE *arq;
-    int op;
+    int opMenu, opImpressao, opQuant;
     char procuraCep[9];
 
-    arq = fopen("baseCep.txt", "r");
+    arq = fopen("tarefa lab 09 baseCep.txt", "r");
 
     if (!arq)
     {
@@ -186,47 +194,70 @@ int main(int argc, char **argv)
     fclose(arq);
 
     // menu de escolha do percursso usar
-    op = 1;
-    while (op != 4)
+    while (opMenu != 3)
     {
-        quant = 0; // imprime so 10 elem
-        // escolha
-        printf("digite uma opcao de percurso = ");
-        printf("1 - pre-ordem\n");
-        printf("2 - ordem\n");
-        printf("3 - pos-ordem\n");
-        printf("4 -  sair\n");
-        scanf("%d", &op);
+        quant = 0; // reinicializa a opQuant pritf dos elem
+
         // menu
-        switch (op)
+        printf("-------BANCO DE DADOS--------\n\n\t[1]-imprimir\n\t[2]-buscarCEp\n\t[3]-sair\n\n");
+        printf("digite uma opcao: ");
+        scanf("%d", &opMenu);
+        printf("-----------------------------\n\n");
+
+        // opcao menu
+        switch (opMenu)
         {
         case 1:
-            printf("imprimindo em pre-ordem\n");
-            imprimePreOrdem(raiz);
+            // opcao impressao
+            printf("IMPRIMIR EM:\n\t[1]-preOrdem\n\t[2]-Ordem\n\t[3]-posOrdem\n\n");
+
+            printf("escolha uma opcao: ");
+            scanf("%d", &opImpressao);
+            printf("-----------------------------\n\n");
+
+            // menu de impressao
+            switch (opImpressao)
+            {
+            case 1:
+                opQuant = escolhaQuant();
+                printf("imprimindo em PreOrdem....\n");
+                imprimePreOrdem(raiz, opQuant);
+                printf("\n");
+                break;
+            case 2:
+                opQuant = escolhaQuant();
+                printf("imprimindo em ordem....\n");
+                imprimeOrdem(raiz, opQuant);
+                printf("\n");
+                break;
+            case 3:
+                opQuant = escolhaQuant();
+                printf("imprimindo em posOrdem....\n");
+                imprimePosOrdem(raiz, opQuant);
+                printf("\n");
+                break;
+
+            default:
+                printf("Opcao invalida\n");
+                break;
+            }
             printf("\n");
             break;
         case 2:
-            printf("imprimindo em ordem\n");
-            imprimeOrdem(raiz);
-            printf("\n");
+            printf("BUSCAR UM CEP:\nescreva o cep procurado: ");
+            scanf("%s", procuraCep);
+            printf("\n\n");
+            buscaCEPArvore(raiz, procuraCep);
             break;
         case 3:
-            printf("imprimindo em pos-ordem\n");
-            imprimePosOrdem(raiz);
-            printf("\n");
-            break;
-        case 4:
             printf("saindo do menu\n");
+            break;
+        default:
+            printf("encerrando programa\n\n");
             break;
         }
     }
 
-    printf("busca por um cep = ");
-    scanf("%s", procuraCep);
-
-    buscaCEPArvore(raiz, procuraCep);
-
-    printf("encerrando programa\n");
     destroiArvore(raiz);
 
     return 0;
