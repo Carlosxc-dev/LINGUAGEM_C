@@ -32,7 +32,7 @@ bool inserenome(char nome[20])
     {
         while ((i > 0) && (strcmp(listaseq[i - 1], nome) > 0))
         {
-            strcpy(listaseq[i], listaseq[i-1]);
+            strcpy(listaseq[i], listaseq[i - 1]);
             i--;
         }
         strcpy(listaseq[i], nome);
@@ -42,8 +42,8 @@ bool inserenome(char nome[20])
 }
 void imprimelista()
 {
-    int i ;
-    for ( i = 0; i < dispo; i++)
+    int i;
+    for (i = 0; i < dispo; i++)
     {
         printf("%s  ", listaseq[i]);
     }
@@ -51,16 +51,16 @@ void imprimelista()
 }
 bool removenome(char nome[20])
 {
-    int i=0;
-    while ((i<dispo)&&(strcmp(listaseq[i], nome)<0))
+    int i = 0;
+    while ((i < dispo) && (strcmp(listaseq[i], nome) < 0))
     {
         i++;
     }
-    if ((i < dispo)&&(strcmp(listaseq[i], nome)==0))
+    if ((i < dispo) && (strcmp(listaseq[i], nome) == 0))
     {
-        while (i<dispo-1)
+        while (i < dispo - 1)
         {
-            strcpy(listaseq[i], listaseq[i+1]);
+            strcpy(listaseq[i], listaseq[i + 1]);
             i++;
         }
         dispo--;
@@ -76,7 +76,7 @@ int main(int argc, char const *argv[])
 {
     int i;
     char nome[20];
-    for ( i = 0; i < MAX; i++)
+    for (i = 0; i < MAX; i++)
     {
         printf("digite um nome = ");
         gets(nome);
@@ -93,7 +93,7 @@ int main(int argc, char const *argv[])
     imprimelista();
     printf("digite um nome pra remover: ");
     gets(nome);
-    if(buscanome(nome)==true)
+    if (buscanome(nome) == true)
     {
         removenome(nome);
         printf("nome removido\n");
@@ -105,9 +105,3 @@ int main(int argc, char const *argv[])
     imprimelista();
     return 0;
 }
-
-
-
-
-
-
