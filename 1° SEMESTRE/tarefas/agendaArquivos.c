@@ -55,6 +55,7 @@ int main(int argc, char **argv)
     fclose(arq); //fecha o arquivo
     return 0;
 } //end main
+
 char menu()
 {
     char op;
