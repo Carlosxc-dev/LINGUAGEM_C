@@ -13,25 +13,30 @@ typedef struct no
 tCarta *priMesa[8] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 tCarta *priNaipe[4] = {NULL, NULL, NULL, NULL};
 tCarta *priTemp[4] = {NULL, NULL, NULL, NULL};
-tCarta *priMonte = NULL;    //inicio da lista de cartas a ser gerada
+tCarta *primMonte = NULL;    //inicio da lista de cartas a ser gerada
 
 // gera as 52 cartas com 4 naipes diferentes
 void gerarBaralho()
 {
-    int i, j;
-    tCarta *aux;
-    //cria os naipes copa, ouro, paus, espada
-    for (i = 3; i < 7; i++) // cria os naipes
-    {
-        for (j = 0; j < 13; j++) // cria os numeros das cartas
-        {
-            aux = (tCarta *)malloc(sizeof(tCarta));
-            aux->numero = j + 1;
-            aux->naipe = i;
-            aux->prox = priMonte;
-            priMonte = aux; // ponteiro que garda a primeira posicao referencia
-        }
-    }
+    int i,j;
+    tCarta *ult;
+
+    //coracao=3, ouro=4, paus=5, espada=6
+    for(i=0; i<4; i++){
+        for(j=1; j<14; j++){
+            if(primMonte==NULL){
+                primMonte=(tCarta *)malloc(sizeof(tCarta));
+                ult=primMonte;
+            }//end if
+            else{
+                ult->prox=(tCarta *)malloc(sizeof(tCarta));
+                ult = ult->prox;
+            }//end else
+            ult->naipe=i+3;
+            ult->numero=j;
+            ult->prox=NULL;
+        }//end for j
+    }//end for i
 }
 //embaralha as 52 cartas do primonte
 void embaralhaBaralho()
