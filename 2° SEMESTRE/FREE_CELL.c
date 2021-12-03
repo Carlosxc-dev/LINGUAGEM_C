@@ -243,19 +243,58 @@ void moveTempMesa(){
     }//end else
 }//end moveTempMesa
 
+void moveNapeTemp(){
+    tCarta *ant, *atual;
+    int posNaipe, posTemp;
+
+    printf("digite a posicao nape (0-3): ");
+    scanf("%d", &posNaipe);
+    getchar();
+    if((posNaipe>=0)&&(posNaipe<=3)&&(primNape[posNaipe] != NULL)){
+        printf("digite a posicao temp(0-3): ");
+        scanf("%d", &posTemp);
+        getchar();
+        if((posTemp>=0)&&(posTemp<=3)&&(temp[posTemp] == NULL)){
+            atual = primNape[posNaipe];
+            while(atual!=NULL){
+                ant = atual;
+                atual = atual->prox;
+            }
+            temp[posTemp] = ant;
+            ant = NULL;// carta apaga do nape quando muda
+        }
+        else
+        {
+            printf("\t\t\tERRO => posicao invalida\n");
+        }
+    }
+    else
+    {
+        printf("\t\t\tERRO => posicao invalida\n");
+    }
+
+
+
+}
+
+
 int main(int argc, char **argv){
     int op=0;
     srand(time(NULL));
     gerarBaralho();
     embaralhaBaralho();
     distribuirMesa();
-    while(op!=4){
+    while(op!=8){
         printf("\n-----------------------------------------------------\n");
         imprime();
         printf("(1)Move Mesa-Nape\n");
         printf("(2)Move Mesa-Temp\n");
         printf("(3)Move Temp-Mesa\n");
-        printf("(4)Sair\n");
+        printf("(4)Move Nape-Temp\n");
+        printf("(5)Move Temp-Naipe\n");
+        printf("(6)Move Nape-Mesa\n");
+        printf("(7)Move Mesa-Mesa\n");
+        printf("(8)Sair\n");
         printf("Opcao: ");
         scanf("%d", &op);
         getchar();
@@ -268,6 +307,18 @@ int main(int argc, char **argv){
             break;
         case 3:
             moveTempMesa();
+            break;
+        case 4:
+            moveNapeTemp();
+            break;
+        case 5:
+            //moveTempNape();
+            break;
+        case 6:
+            //moveNaipeMesa();
+            break;
+        case 7:
+            //moveMesaMesa();
             break;
         default:
             printf("\t\t\tERRO => Opcao invalida\n");
