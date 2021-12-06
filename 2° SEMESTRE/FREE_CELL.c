@@ -244,10 +244,10 @@ void moveTempMesa(){
 }//end moveTempMesa
 
 void moveNapeTemp(){
-    tCarta *ant, *atual;
+    tCarta *ant, *aux, *atual;
     int posNaipe, posTemp;
 
-    printf("digite a posicao nape (0-3): ");
+    printf("digite a posicao pilha nape (0-3): ");
     scanf("%d", &posNaipe);
     getchar();
     if((posNaipe>=0)&&(posNaipe<=3)&&(primNape[posNaipe] != NULL)){
@@ -256,12 +256,12 @@ void moveNapeTemp(){
         getchar();
         if((posTemp>=0)&&(posTemp<=3)&&(temp[posTemp] == NULL)){
             atual = primNape[posNaipe];
-            while(atual!=NULL){
-                ant = atual;
+            while(atual->prox != NULL){
+                aux = atual;
                 atual = atual->prox;
             }
-            temp[posTemp] = ant;
-            ant = NULL;// carta apaga do nape quando muda
+            temp[posTemp] = aux;   // arrumar bug 
+            aux->prox = NULL;
         }
         else
         {
@@ -274,6 +274,52 @@ void moveNapeTemp(){
     }
 
 
+
+}
+
+void moveTempNape(){
+    tCarta *aux, *atual;
+    int posNape, posTemp;
+
+    printf("digite a posicao do temp(0-3): ");
+    scanf("%d", &posTemp);
+    getchar();
+    if((posTemp>=0)&&(posTemp<=3)&&(temp[posTemp] != NULL)){
+        printf("digite a posicao naipe(0-3): ");
+        scanf("%d", &posNape);
+        getchar();
+        if( (posNape>=0)&&(posNape<=3)){
+            atual = primNape[posNape];
+            while(atual != NULL){
+                aux = atual;
+                atual = atual->prox;
+            }
+            if((saoCoresDiferentes(aux, temp[posTemp]) == false)&&(aux->numero < temp[posTemp])){
+                aux->prox = temp[posTemp];
+
+            }
+            else
+            {
+                printf("\t\t\tERRO => nao pode mover\n");
+            }
+        }
+        else
+        {
+            printf("\t\t\tERRO => nao pode mover\n");
+        }
+    }
+    else
+    {
+        printf("\t\t\tERRO => nao pode mover\n");
+    }
+
+}
+
+void moveNaipeMesa(){
+
+}
+
+void moveMesaMesa(){
 
 }
 
@@ -312,18 +358,18 @@ int main(int argc, char **argv){
             moveNapeTemp();
             break;
         case 5:
-            //moveTempNape();
+            moveTempNape();
             break;
         case 6:
-            //moveNaipeMesa();
+            moveNaipeMesa();
             break;
         case 7:
-            //moveMesaMesa();
+            moveMesaMesa();
             break;
         default:
             printf("\t\t\tERRO => Opcao invalida\n");
             break;
-        }//end switch
-    }//end while
+        }
+    }
     return 0;
-}//end main999888777
+}
