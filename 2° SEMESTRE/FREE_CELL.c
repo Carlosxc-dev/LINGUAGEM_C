@@ -14,6 +14,7 @@ tCarta *primMonte = NULL;
 tCarta *primMesa[] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
 tCarta *primNape[] = {NULL, NULL, NULL, NULL};
 tCarta *temp[] = {NULL, NULL, NULL, NULL};
+bool jogada = true; // executar funcao move nape pro mesa uma vez
 
 bool ehVermelho(tCarta *carta)
 {
@@ -281,9 +282,9 @@ void moveTempMesa()
                 else
                 {
                     printf("\t\t\tERRO => Nao pode mover temp para mesa\n");
-                } // end else
-            }     // end else
-        }         // end if
+                }
+            }
+        }
         else
         {
             printf("\t\t\tERRO => Nao pode mover temp para mesa\n");
@@ -311,13 +312,23 @@ void moveNapeTemp()
         if ((posTemp >= 0) && (posTemp <= 3) && (temp[posTemp] == NULL))
         {
             atual = primNape[posNaipe];
+            ant = NULL;
             while (atual->prox != NULL)
             {
-                aux = atual;
+                ant = atual;
                 atual = atual->prox;
             }
-            temp[posTemp] = aux; // arrumar bug
-            aux->prox = NULL;
+
+            if (ant == NULL) // caso so tenha um elemento no nape
+            {
+                temp[posTemp] = primNape[posNaipe];
+                primNape[posNaipe] = NULL;
+            }
+            else // caso mais um elem no naipe
+            {
+                temp[posTemp] = atual;
+                ant->prox = NULL;
+            }
         }
         else
         {
@@ -332,7 +343,7 @@ void moveNapeTemp()
 
 void moveTempNape()
 {
-    tCarta *aux, *atual;
+    tCarta *aux, *atual, *ant;
     int posNape, posTemp;
 
     printf("digite a posicao do temp(0-3): ");
@@ -346,14 +357,27 @@ void moveTempNape()
         if ((posNape >= 0) && (posNape <= 3))
         {
             atual = primNape[posNape];
-            while (atual != NULL)
+            ant = NULL;
+            while ((atual != NULL) && (atual->prox != NULL))
             {
-                aux = atual;
-                atual = atual->prox;
+                ant = atual;
+                atual = atual->prox; // ultimo
             }
-            if ((saoCoresDiferentes(aux, temp[posTemp]) == false) && (aux->numero < temp[posTemp]))
+
+            if ((((temp[posTemp]->numero == 1) && (primNape[posNape] == NULL)) ||
+                 ((primNape[posNape] != NULL) &&
+                  (temp[posTemp]->nape == primNape[posNape]->nape) &&
+                  (temp[posTemp]->numero - 1 == primNape[posNape]->numero))))
             {
-                aux->prox = temp[posTemp];
+                if (atual == NULL) // vazio
+                {
+                    primNape[posNape] = temp[posTemp];
+                }
+                else // 1 ou + elem
+                {
+                    atual->prox = temp[posTemp];
+                }
+                temp[posTemp] = NULL;
             }
             else
             {
@@ -373,7 +397,7 @@ void moveTempNape()
 
 void moveNaipeMesa()
 {
-    tCarta *aux, *atual;
+    tCarta *antMesa, *atualMesa, *antNape, *atualNape, *aux;
     int posNape, posMesa;
 
     printf("digite a posicao do nape(0-3): ");
@@ -382,8 +406,72 @@ void moveNaipeMesa()
     if ((posNape >= 0) && (posNape <= 3) && (primNape[posNape] != NULL))
     {
         printf("digite a posicao mesa(0-7): ");
-        scanf("%d", &posNape);
+        scanf("%d", &posMesa);
         getchar();
+
+        if ((posMesa >= 0) && (posMesa <= 7))
+        {
+            // pilha de napes
+            atualNape = primNape[posNape];
+            antNape = NULL; // tem 1 elem
+            while (atualNape->prox != NULL)
+            {
+                antNape = atualNape;
+                atualNape = atualNape->prox; // ultimo
+            }
+
+            // pilha da mesa
+            atualMesa = primMesa[posMesa];
+            antMesa = NULL; // 1 elem na mesa
+            while ((primMesa[posMesa] != NULL) && (atualMesa->prox != NULL))
+            {
+                antMesa = atualMesa;
+                atualMesa = atualMesa->prox;
+            }
+            if ((saoCoresDiferentes(atualMesa, atualNape) == true) &&
+                (atualNape->numero < atualMesa->numero))
+            {
+
+                // condicoes para a pilhas da mesas
+                if (antMesa == NULL) // mesa tem 1 elem
+                {
+                    atualMesa->prox = atualNape;
+                }
+                else if (primMesa[posMesa] == NULL) // mesa vazia
+                {
+                    primMesa[posMesa] == atualNape;
+                }
+                else // mesa mais 1 elem
+                {
+                    atualMesa->prox = atualNape;
+                }
+
+                // condicoes para as pilhas de naipes
+                if (antNape == NULL) // pilha naipe tem 1 elem
+                {
+                    primNape[posNape] = NULL;
+                }
+                else // pilha de naipes tem mais de um elem
+                {
+                    antNape->prox = NULL;
+                }
+            }
+            else
+            {
+                printf("\t\t\tERRO => nao pode mover1\n");
+                jogada = true;
+            }
+        }
+        else
+        {
+            printf("\t\t\tERRO => nao pode mover2\n");
+            jogada = true;
+        }
+    }
+    else
+    {
+        printf("\t\t\tERRO => nao pode mover3\n");
+        jogada = true;
     }
 }
 
@@ -391,6 +479,11 @@ void moveMesaMesa()
 {
     tCarta *aux, *atual;
     int posMesa1, posMesa2;
+
+    
+
+
+
 }
 
 int main(int argc, char **argv)
@@ -433,7 +526,15 @@ int main(int argc, char **argv)
             moveTempNape();
             break;
         case 6:
-            moveNaipeMesa();
+            if (jogada == true)
+            {
+                jogada = false;
+                moveNaipeMesa();
+            }
+            else
+            {
+                printf("\t\t\tERRO => ja moveu uma vez\n");
+            }
             break;
         case 7:
             moveMesaMesa();
