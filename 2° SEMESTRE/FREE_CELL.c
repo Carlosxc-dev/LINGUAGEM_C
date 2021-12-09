@@ -477,9 +477,10 @@ void moveNaipeMesa()
 
 void moveMesaMesa()
 {
-    tCarta *aux, *atualOrigem, *atualDestino, *antOrigem, *antDestino, *auxRemove;
-    int posMesaOrigem, posMesaDestino, escolha, qntCartasEscolha, qntCartaOrigem;
-    int i, count;
+    tCarta *atualOrigem, *atualDestino, *antOrigem, *antDestino;
+    tCarta *aux, *lista[] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+    int posMesaOrigem, posMesaDestino, escolha, qntCartasEscolha = 0;
+    int i, x=1, maiorLista;
 
     printf("mover --> [1]-carta ou [2]-bloco: ");
     scanf("%d", &escolha);
@@ -494,30 +495,31 @@ void moveMesaMesa()
     if ((posMesaOrigem >= 0) && (posMesaOrigem <= 7) && (posMesaDestino >= 0) &&
         (posMesaDestino <= 7) && (primMesa[posMesaOrigem] != NULL))
     {
-        // percorrer mesa da origem
-        atualOrigem = primMesa[posMesaOrigem];
-        antOrigem = NULL;
-        while (atualOrigem->prox != NULL)
+        // mover uma carta
+        if (escolha == 1)
         {
-            antOrigem = atualOrigem;
-            atualOrigem = atualOrigem->prox; // ultimo
-        }
+            // percorrer mesa da origem
+            atualOrigem = primMesa[posMesaOrigem];
+            antOrigem = NULL;
+            while (atualOrigem->prox != NULL)
+            {
+                antOrigem = atualOrigem;
+                atualOrigem = atualOrigem->prox; // ultimo
+            }
 
-        // percorrer mesa do destino
-        atualDestino = primMesa[posMesaDestino];
-        antDestino = NULL;
-        while (atualDestino->prox != NULL)
-        {
-            antDestino = atualDestino;
-            atualDestino = atualDestino->prox;
-        }
-
-        if (escolha == 1) // mover uma carta
-        {
-            if ((atualOrigem < atualDestino) &&
+            // percorrer mesa do destino
+            atualDestino = primMesa[posMesaDestino];
+            antDestino = NULL;
+            while (atualDestino->prox != NULL)
+            {
+                antDestino = atualDestino;
+                atualDestino = atualDestino->prox; // ultimo
+            }
+            // condicoes para mover
+            if ((atualOrigem->numero < atualDestino->numero) &&
                 (saoCoresDiferentes(atualOrigem, atualDestino) == true))
             {
-                atualDestino->prox = atualOrigem;                       // arrumar bug
+                atualDestino->prox = atualOrigem;
                 if (antOrigem == NULL) // 1 carta mesa
                 {
                     primMesa[posMesaOrigem] = NULL;
@@ -529,40 +531,60 @@ void moveMesaMesa()
             }
             else
             {
-                printf("\t\t\tERRO => Nao e possivel mover!\n");
+                printf("\t\t\tERRO => Nao e possivel mover1\n");
             }
         }
-        else // mover um bloco
+        // mover um bloco
+        else
         {
             printf("escolha quantidade de cartas: ");
             scanf("%d", &qntCartasEscolha);
-            // obtem a  qnt de cartas em uma mesa de origem
-            aux = primMesa[posMesaOrigem];
-            for (qntCartaOrigem; aux != NULL; qntCartaOrigem++)
+            for (i = 0; i < qntCartasEscolha; i++) // faz numero de remocao do final pro inicio
             {
-                aux = aux->prox;
-            }
+                // percorrer mesa da origem
+                atualOrigem = primMesa[posMesaOrigem];
+                antOrigem = NULL;
+                while (atualOrigem->prox != NULL)
+                {
+                    antOrigem = atualOrigem;
+                    atualOrigem = atualOrigem->prox; // ultimo
+                }
+                antOrigem->prox = NULL; // apago mesa origem
 
-            if (qntCartaOrigem >= qntCartasEscolha)
+                lista[x] = atualOrigem; // adiciona em um vetor de ponteiros
+                x++;
+            }
+            //saber qual maior elem da lista 
+            while(x != 0){
+                maiorLista = lista[0]->numero;      // arrumar bug
+                for ( i = 1; i < x; i++)
+                {
+                    if(lista[i] >= maiorLista){
+                        maiorLista = lista[i]->numero;
+                    }
+                }
+                x--;
+            }
+            // faz insercao no destino 
+            if (( maiorLista < atualDestino)&&(saoCoresDiferentes(atualDestino, lista[maiorLista])))
             {
-                // acha a primeira carta a ser movida
-                aux = primMesa[posMesaOrigem];
-                for (i = 0; i < qntCartaOrigem - qntCartasEscolha; i++)
+                for (x; x != 0; x--)
                 {
-                    aux = aux->prox;
-                    auxRemove = aux;
+
+                    atualDestino = primMesa[posMesaDestino];
+                    antDestino = NULL;
+                    while (atualDestino->prox != NULL)
+                    {
+                        antDestino = atualDestino;
+                        atualDestino = atualDestino->prox; // ultimo
+                    }
+                    atualDestino->prox = lista[x]; // adiciona cartas no destino
                 }
-                // move as ultimas cartas escolhidas
-                for (i = 0; i < qntCartasEscolha; i++)
-                {
-                    atualDestino->prox = aux->prox;
-                    aux = aux->prox;
-                }
-                auxRemove->prox = NULL;
             }
             else
             {
-                printf("\t\t\tERRO => Nao e possivel mover!\n");
+                printf("\t\t\tERRO => Nao e possivel mover! aaa\n");
+    
             }
         }
     }
