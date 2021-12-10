@@ -114,7 +114,7 @@ bool condicaoMudarBlocoCartas(int origem, int destino, int qntEscolha)
         atualDestino = atualDestino->prox; // ultimo
     }
     // condicoes para mover
-    if ((maiorMesa < atualDestino->numero)&&(saoCoresDiferentes(atualDestino, aux)))
+    if ((maiorMesa < atualDestino->numero) && (saoCoresDiferentes(atualDestino, aux)))
     {
         return true;
     }
@@ -122,7 +122,6 @@ bool condicaoMudarBlocoCartas(int origem, int destino, int qntEscolha)
     {
         return false;
     }
-
 }
 
 void mudaUmBlocoCartas(int origem, int destino)
@@ -316,7 +315,7 @@ void moveMesaNape()
         getchar();
         ant = NULL;
         atual = primMesa[posMesa];
-        while (atual->prox != NULL)
+        while ((atual->prox != NULL) && (primMesa[posMesa] != NULL))
         {
             ant = atual;
             atual = atual->prox;
@@ -654,6 +653,40 @@ void moveMesaMesa()
     }
 }
 
+void destroi()
+{
+    tCarta *apaga, *atual;
+    int i;
+    // apaga todos os mesas
+    for (i = 0; i < 8; i++)
+    {
+        atual = primMesa[i];
+        while (atual != NULL)
+        {
+            apaga = atual;
+            atual = atual->prox;
+            free(apaga);
+        }
+    }
+    // apaga todos os naipes
+    for (i = 0; i < 4; i++)
+    {
+        atual = primNape[i];
+        while (atual != NULL)
+        {
+            apaga = atual;
+            atual = atual->prox;
+            free(apaga);
+        }
+    }
+    // apaga todos os temp
+    for (i = 0; i < 4; i++)
+    {
+        apaga = temp[i];
+        free(apaga);
+    }
+}
+
 int main(int argc, char **argv)
 {
     int op = 0;
@@ -700,9 +733,10 @@ int main(int argc, char **argv)
             moveMesaMesa();
             break;
         default:
-            printf("\t\t\tERRO => Opcao invalida\n");
+            printf("\t\t\t FIM DE JOGO\n");
             break;
         }
     }
+    destroi();
     return 0;
 }
