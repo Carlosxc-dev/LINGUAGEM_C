@@ -31,7 +31,7 @@ bool saoCoresDiferentes(tCarta *carta1, tCarta *carta2)
             (ehPreto(carta1) && ehVermelho(carta2)));
 } // end saoCoresDiferentes
 
-void mudaUmaCarta(origem, destino)
+void mudaUmaCarta(int origem, int destino)
 {
     tCarta *atualDestino, *antDestino, *atualOrigem, *antOrigem;
 
@@ -72,26 +72,60 @@ void mudaUmaCarta(origem, destino)
     }
 }
 
-bool condicaoMudarBlocoCartas(origem, destino, qntEscolha)
+bool condicaoMudarBlocoCartas(int origem, int destino, int qntEscolha)
 {
-    int i, j, x, qntCartaMesa = 0;
-    tCarta *ant, *atual, *aux;
+    int i, j, x, qntCartaMesa = 0, maiorMesa;
+    tCarta *ant, *atual, *aux, *atualDestino, *antDestino;
 
     atual = primMesa[origem];
     ant = NULL;
+    // conta quantas cartas tem na mesa
     while (atual->prox != NULL)
     {
         ant = atual;
         atual = atual->prox;
         qntCartaMesa++;
     }
+    // acha posicao da primeira carta a ser movida
+    qntCartaMesa = qntCartaMesa - qntEscolha;
+    atual = primMesa[origem];
+    for (i = 0; i < qntCartaMesa; i++)
+    {
+        atual = atual->prox;
+    }
+    // pega os elem e e verifica qual o maior
+    maiorMesa = atual->numero;
+    aux = atual;
+    for (i = 0; i < qntEscolha; i++)
+    {
+        atual = atual->prox;
+        if (maiorMesa <= atual->numero)
+        {
+            maiorMesa = atual->numero;
+            aux = atual;
+        }
+    }
+    // percorrer mesa do destino para saber o ultimo
+    atualDestino = primMesa[destino];
+    antDestino = NULL;
+    while (atualDestino->prox != NULL)
+    {
+        antDestino = atualDestino;
+        atualDestino = atualDestino->prox; // ultimo
+    }
+    // condicoes para mover
+    if ((maiorMesa < atualDestino->numero)&&(saoCoresDiferentes(atualDestino, aux)))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 
-    
-
-    return true;
 }
 
-void mudaUmBlocoCartas(origem, destino)
+void mudaUmBlocoCartas(int origem, int destino)
 {
     tCarta *atualOrigem, *atualDestino, *antOrigem, *antDestino, *aux;
     tCarta *lista[] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
